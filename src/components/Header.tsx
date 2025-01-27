@@ -17,6 +17,7 @@ interface HeaderComponentProps {
   onProfileClick?: () => void;
 }
 
+
 const HeaderComponent: React.FC<HeaderComponentProps> = ({
   title = 'My Application',
   logo,

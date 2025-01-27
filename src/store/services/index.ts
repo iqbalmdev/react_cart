@@ -1,0 +1,1 @@
+export {default as fetchImages} from "./searchProduct"

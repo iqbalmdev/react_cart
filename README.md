@@ -50,5 +50,5 @@ You need Node.js installed on your system. You can download it from [here](https
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/your-username/my-react-cart.git
+   git clone https://github.com/iqbalmdev/react_cart.git
    cd my-react-cart

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { calculateRemainingStock, calculateProductSales } from '../utils/calculations';
 import {
@@ -13,6 +13,7 @@ import {
   Box,
   IconButton,
   Button,
+  Switch,
 } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
@@ -24,14 +25,22 @@ const ProductListingPage: React.FC = () => {
     state.products.products.filter((product) => product.categoryId === categoryId)
   );
   const orders = useSelector((state: RootState) => state.orders.orders);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleDeleteProduct = (id: string) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this product?");
+    const confirmDelete = window.confirm('Are you sure you want to delete this product?');
     if (confirmDelete) {
-      // Dispatch action to delete product (not implemented here)
-      alert(`Product with ID: ${id} deleted successfully.`);
+      dispatch({ type: 'products/deleteProduct', payload: id });
+      alert('Product deleted successfully.');
     }
+  };
+
+  const toggleProductStatus = (id: string, status: boolean) => {
+    dispatch({
+      type: 'products/toggleProductStatus',
+      payload: id,
+    });
   };
 
   return (
@@ -55,6 +64,7 @@ const ProductListingPage: React.FC = () => {
               <TableCell>Name</TableCell>
               <TableCell>Remaining Stock</TableCell>
               <TableCell>Total Sales</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -71,6 +81,14 @@ const ProductListingPage: React.FC = () => {
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{calculateRemainingStock(product.id, products, orders)}</TableCell>
                 <TableCell>${calculateProductSales(product.id, orders)}</TableCell>
+                <TableCell>
+                  <Switch
+                    checked={product.active}
+                    onChange={() => toggleProductStatus(product.id, product.active)}
+                    color="primary"
+                  />
+                  {product.active ? 'Active' : 'Inactive'}
+                </TableCell>
                 <TableCell>
                   <IconButton
                     color="primary"

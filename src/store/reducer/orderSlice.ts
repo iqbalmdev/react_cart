@@ -1,8 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Order {
+export interface OrderItem {
   id: string;
-  items: { id: string; name: string; price: number; quantity: number }[];
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+// Define the Order interface
+export interface Order {
+  id: string;
+  items: OrderItem[];
   total: number;
 }
 

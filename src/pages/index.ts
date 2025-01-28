@@ -9,6 +9,7 @@ export {default as ManageCategoryPage} from "./ManageCategoryPage"
 export {default as ProductFormPage} from "./ManageProductPage"
 export {default as CategoryProductListPage} from "./CategoryProductListPage"
 export {default as OrderPage} from "./OrderPage"
+
 export {
     LoginPage
 }

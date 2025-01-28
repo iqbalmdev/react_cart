@@ -4,7 +4,7 @@ import { PrivateLayout } from "../layouts";
 import { NotFound } from "../pages";
 import { useSelector } from "react-redux";
 import { RootState } from '../store/index';
-import { LoginPage, HomePage, ProductListingPage, ItemDescriptionPage, CartPage,CategoryPage,ManageCategoryPage,ProductFormPage ,CategoryProductListPage,OrderPage} from "../pages";
+import { LoginPage, HomePage, ProductListingPage, CartPage,CategoryPage,ManageCategoryPage,ProductFormPage ,CategoryProductListPage,OrderPage,ItemDescriptionPage} from "../pages";
 
 const AppRouter = () => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -26,6 +26,7 @@ const AppRouter = () => {
           <Route path="categories/create" element={<ManageCategoryPage />} />
           <Route path="categories/edit/:categoryId" element={<ManageCategoryPage />} />
           <Route path="products/create/:categoryId" element={<ProductFormPage />} />
+          <Route path="/product/:productId" element={<ItemDescriptionPage />} />
           <Route path="products/:categoryId/edit/:productId" element={<ProductFormPage />} />
           <Route path="products/users/:categoryId/" element={<CategoryProductListPage />} />
           <Route path="/orders" element={<OrderPage />} />

@@ -31,7 +31,7 @@ const ManageCategoryPage: React.FC = () => {
 
   useEffect(() => {
     if (category) {
-      reset({ name: category.name, image: category.image });
+      reset({ name: category.name, image: category.name });
     }
   }, [category, reset]);
 

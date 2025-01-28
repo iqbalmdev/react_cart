@@ -1,29 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store';
-import { useParams } from 'react-router-dom';
-import { addToCart } from '../store/reducer/cartSlice'; // Redux action to add items to the cart
-import { Card, CardMedia, CardContent, Button, Typography, Stack } from '@mui/material';
-
-
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../store";
+import { useParams, useNavigate } from "react-router-dom";
+import { addToCart } from "../store/reducer/cartSlice"; // Redux action to add items to the cart
+import { Card, CardMedia, CardContent, Button, Typography, Stack } from "@mui/material";
 
 interface Product {
-    id: string;
-    name: string;
-    price: number;
-    stock: number;
-    categoryId: string;
-    active: boolean;
-    description:string;
-    image:string
-  }
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+  categoryId: string;
+  active: boolean;
+  description: string;
+  image: string;
+}
+
 const CategoryProductListPage: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const products = useSelector((state: RootState) =>
-    state.products.products.filter((product) => product.categoryId === categoryId && product.active)
+    state.products.products.filter(
+      (product) => product.categoryId === categoryId && product.active
+    )
   );
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Local state for tracking product quantity selection
   const [quantity, setQuantity] = useState<{ [key: string]: number }>({});
@@ -37,19 +39,31 @@ const CategoryProductListPage: React.FC = () => {
     const selectedQuantity = quantity[product.id] || 0;
     // Only add to cart if quantity is greater than 0 and within stock limit
     if (selectedQuantity > 0 && selectedQuantity <= product.stock) {
-      dispatch(addToCart({ id: product.id, name: product.name, price: product.price, quantity: selectedQuantity }));
+      dispatch(
+        addToCart({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          quantity: selectedQuantity,
+        })
+      );
+      alert("Added to cart");
     }
   };
 
-  const handleQuantityChange = (productId: string, action: 'increment' | 'decrement') => {
+  const handleQuantityChange = (
+    productId: string,
+    action: "increment" | "decrement"
+  ) => {
     setQuantity((prev) => {
       const newQuantity = prev[productId] || 0;
-      const productStock = products.find(p => p.id === productId)?.stock || 0;
+      const productStock =
+        products.find((p) => p.id === productId)?.stock || 0;
 
-      if (action === 'increment' && newQuantity < productStock) {
+      if (action === "increment" && newQuantity < productStock) {
         return { ...prev, [productId]: newQuantity + 1 };
       }
-      if (action === 'decrement' && newQuantity > 0) {
+      if (action === "decrement" && newQuantity > 0) {
         return { ...prev, [productId]: newQuantity - 1 };
       }
       return prev;
@@ -61,14 +75,29 @@ const CategoryProductListPage: React.FC = () => {
       <Typography variant="h4" component="h1" fontWeight="bold">
         Products in Category
       </Typography>
-      <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
+      <Stack
+        direction="row"
+        spacing={2}
+        flexWrap="wrap"
+        justifyContent="center"
+      >
         {products.length === 0 ? (
           <Typography variant="h6" color="textSecondary">
             No products available in this category.
           </Typography>
         ) : (
-          products.filter((pr)=>pr.active === true).map((product) => (
-            <Card key={product.id} sx={{ width: 200, boxShadow: 3, borderRadius: 2, textAlign: 'center' }}>
+          products.map((product) => (
+            <Card
+              key={product.id}
+              sx={{
+                width: 200,
+                boxShadow: 3,
+                borderRadius: 2,
+                textAlign: "center",
+                cursor: "pointer",
+              }}
+              onClick={() => navigate(`/product/${product.id}`)} // Navigate to product description page
+            >
               <CardMedia
                 component="img"
                 image={product.image}
@@ -82,10 +111,18 @@ const CategoryProductListPage: React.FC = () => {
                 <Typography variant="body2" color="textSecondary">
                   ${product.price}
                 </Typography>
-                <Stack direction="row" spacing={1} justifyContent="center" sx={{ mt: 2 }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  justifyContent="center"
+                  sx={{ mt: 2 }}
+                >
                   <Button
                     variant="outlined"
-                    onClick={() => handleQuantityChange(product.id, 'decrement')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleQuantityChange(product.id, "decrement");
+                    }}
                     disabled={quantity[product.id] <= 0}
                   >
                     -
@@ -93,7 +130,10 @@ const CategoryProductListPage: React.FC = () => {
                   <Typography>{quantity[product.id] || 0}</Typography>
                   <Button
                     variant="outlined"
-                    onClick={() => handleQuantityChange(product.id, 'increment')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleQuantityChange(product.id, "increment");
+                    }}
                     disabled={quantity[product.id] >= product.stock}
                   >
                     +
@@ -102,8 +142,14 @@ const CategoryProductListPage: React.FC = () => {
                 <Button
                   variant="contained"
                   sx={{ mt: 2 }}
-                  onClick={() => handleAddToCart(product)}
-                  disabled={quantity[product.id] <= 0 || quantity[product.id] > product.stock}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCart(product);
+                  }}
+                  disabled={
+                    quantity[product.id] <= 0 ||
+                    quantity[product.id] > product.stock
+                  }
                 >
                   Add to Cart
                 </Button>

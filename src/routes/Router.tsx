@@ -26,7 +26,7 @@ const AppRouter = () => {
           <Route path="categories/create" element={<ManageCategoryPage />} />
           <Route path="categories/edit/:categoryId" element={<ManageCategoryPage />} />
           <Route path="products/create/:categoryId" element={<ProductFormPage />} />
-          <Route path="/product/:productId" element={<ItemDescriptionPage />} />
+          {/* <Route path="/product/:productId" element={<ItemDescriptionPage />} /> */}
           <Route path="products/:categoryId/edit/:productId" element={<ProductFormPage />} />
           <Route path="products/users/:categoryId/" element={<CategoryProductListPage />} />
           <Route path="/orders" element={<OrderPage />} />
